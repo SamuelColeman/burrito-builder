@@ -6,7 +6,8 @@ class OrderForm extends Component {
     this.props = props;
     this.state = {
       name: '',
-      ingredients: []
+      ingredients: [],
+      error: ''
     };
   }
 
@@ -21,7 +22,12 @@ class OrderForm extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.clearInputs();
+    if (this.state.ingredients.length > 0) {
+      this.clearInputs();
+      this.setState({ error: '' })
+    } else {
+      this.setState({ error: 'Burritos need at least one ingredient!' })
+    }
   }
 
   clearInputs = () => {
@@ -55,6 +61,7 @@ class OrderForm extends Component {
         <button onClick={e => this.handleSubmit(e)}>
           Submit Order
         </button>
+        <p>{this.state.error}</p>
       </form>
     )
   }
