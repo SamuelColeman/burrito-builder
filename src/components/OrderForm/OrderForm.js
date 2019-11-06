@@ -1,4 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { setOrders } from '../../actions';
+import { postOrders } from '../../apiCalls';
 
 class OrderForm extends Component {
   constructor(props) {
@@ -21,10 +25,14 @@ class OrderForm extends Component {
   }
 
   handleSubmit = e => {
+    const { ingredients, name } = this.state;
     e.preventDefault();
-    if (this.state.ingredients.length > 0) {
+    if (ingredients.length > 0) {
       this.clearInputs();
-      this.setState({ error: '' })
+      this.setState({ error: '' });
+      postOrders({ name, ingredients })
+        .then(data => this.props.setOrders([...this.props.orders, data]))
+        .catch(err => console.error('Error fetching:', err));
     } else {
       this.setState({ error: 'Burritos need at least one ingredient!' })
     }
@@ -67,4 +75,14 @@ class OrderForm extends Component {
   }
 }
 
-export default OrderForm;
+export const mapStateToProps = ({ orders }) => ({
+  orders
+});
+
+export const mapDispatchToProps = dispatch => (
+  bindActionCreators({
+    setOrders,
+  }, dispatch)
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(OrderForm);
