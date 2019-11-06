@@ -10,6 +10,7 @@ describe('OrderForm', () => {
 	let wrapper;
 	let mockIngredients = ['beans', 'steak'];
 	let mockOrders = [{id: 20, name: 'Sam', ingredients: ['Beans']}];
+	let mockState = {name: 'Sam', ingredients: ['Beans']}
 
 	postOrders.mockImplementation(() => {
         return Promise.resolve(mockOrders);
@@ -50,7 +51,7 @@ describe('OrderForm', () => {
   	wrapper.instance().handleSubmit(mockIngredientEvent);
   	expect(wrapper.instance().clearInputs).toHaveBeenCalled();
   	expect(wrapper.state('ingredients')).toEqual(['Beans']);
-  	await expect(postOrders).toHaveBeenCalledWith( wrapper.state('name'), wrapper.state('ingredients') );
+  	await expect(postOrders).toHaveBeenCalledWith(mockState);
   });
 
   it('should invoke handleIngredientChange when button is clicked', () => {
